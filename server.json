@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.pipeworx-io/gitlab-public",
-  "title": "gitlau puulic",
-  "description": "GitLab Public MCP — wraps the GitLab REST API v4 (public endpoints, no auth)",
+  "title": "Gitlab Public",
+  "description": "GitLab Public MCP \u2014 wraps the GitLab REST API v4 (public endpoints, no auth)",
   "version": "0.1.0",
   "websiteUrl": "https://pipeworx.io/packs/gitlab-public",
   "repository": {
