@@ -2,14 +2,14 @@
 
 GitLab Public MCP — wraps the GitLab REST API v4 (public endpoints, no auth)
 
-Part of [Pipeworx](https://pipeworx.io) — an MCP gateway connecting AI agents to 1476+ live data sources.
+Part of [Pipeworx](https://pipeworx.io) — an MCP gateway connecting AI agents to 1679+ live data sources.
 
 ## Tools
 
 | Tool | Description |
 |------|-------------|
 | `search_projects` | Search public GitLab projects by keyword, sorted by popularity. Returns project ID, name, description, star count, fork count, open issues, and web URL. |
-| `get_project` | Get full details for a public GitLab project by ID or path (e.g., "gitlab-org%2Fgitlab"). Returns name, description, stars, forks, default branch, topics, and last activity date. |
+| `get_project` | Get full details for a public GitLab project by numeric ID or "namespace/project" path (e.g., "gitlab-org/gitlab"). Pass the path as written, with a plain slash — do not URL-encode it, the tool handles that internally. Returns name, description, stars, forks, default branch, topics, and last activity date. |
 | `search_issues` | Search issues across public GitLab projects by keyword. Returns issue title, state, author, labels, project ID, and direct URL. |
 
 ## Quick Start
@@ -56,9 +56,45 @@ directly, instead of just this one's:
 }
 ```
 
-Both URLs reach the same gateway and the same 1476+ data sources. The
+Both URLs reach the same gateway and the same 1679+ data sources. The
 only difference is which pack's tools are listed **directly**; `ask_pipeworx`
 reaches all of them from either one.
+
+## No MCP client? Call it over HTTP
+
+```bash
+curl -X POST https://gateway.pipeworx.io/v1/tools/gitlab_public_search_projects \
+  -H 'Content-Type: application/json' \
+  -d '{"query":"machine learning"}'
+```
+
+No account needed for the first calls. Inspect any tool: `GET https://gateway.pipeworx.io/v1/tools/gitlab_public_search_projects`. Find one: `POST https://gateway.pipeworx.io/v1/tools/search_packs` with `{"query":"..."}`.
+
+## Standalone (no gateway account)
+
+This package also runs as a local stdio MCP server — no Pipeworx account, no
+gateway round-trip:
+
+```json
+{
+  "mcpServers": {
+    "gitlab-public": {
+      "command": "npx",
+      "args": ["-y", "@pipeworx/mcp-gitlab-public"]
+    }
+  }
+}
+```
+
+Or run it directly to confirm it starts:
+
+```bash
+npx -y @pipeworx/mcp-gitlab-public
+```
+
+It speaks MCP over stdin/stdout and answers `initialize`/`tools/list`/`tools/call`
+for **only** this pack's tools — none of the shared meta-tools the gateway
+connection above adds. Same source, same tools, no ask_pipeworx routing.
 
 ## Using with ask_pipeworx
 
@@ -79,13 +115,3 @@ The gateway picks the right tool and fills the arguments automatically.
 ## License
 
 MIT
-
-## No MCP client? Call it over HTTP
-
-```bash
-curl -X POST https://gateway.pipeworx.io/v1/tools/gitlab_public_search_projects \
-  -H 'Content-Type: application/json' \
-  -d '{"query":"machine learning"}'
-```
-
-No account needed for the first calls. Inspect any tool: `GET https://gateway.pipeworx.io/v1/tools/gitlab_public_search_projects`. Find one: `POST https://gateway.pipeworx.io/v1/tools/search_packs` with `{"query":"..."}`.
